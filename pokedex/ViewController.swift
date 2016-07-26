@@ -9,10 +9,13 @@
 import UIKit
 import AVFoundation
 
-class ViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
+class ViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     @IBOutlet weak var collection: UICollectionView!
+    @IBOutlet weak var pokeSearch: UISearchBar!
     
     var pokemon = [Pokemon]()
+    var filteredPokemon = [Pokemon]()
+    var inSearchMode = false
     var musicPlayer: AVAudioPlayer!
 
     
@@ -20,6 +23,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         super.viewDidLoad()
         collection.delegate = self
         collection.dataSource = self
+        pokeSearch.delegate = self
         parsePokemonCSV()
         initAudio()
     }
@@ -67,7 +71,13 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         
         if let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PokeCell", forIndexPath: indexPath) as? PokeCell{
             
-            let poke = pokemon[indexPath.row]
+            let poke: Pokemon!
+            
+            if inSearchMode{
+                poke = filteredPokemon[indexPath.row]
+            } else {
+                poke = pokemon[indexPath.row]
+            }
             cell.configureCell(poke)
             
             
@@ -79,10 +89,25 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         
+        let poke: Pokemon!
+        
+        if inSearchMode{
+            poke = filteredPokemon[indexPath.row]
+        } else {
+            poke = pokemon[indexPath.row]
+        }
+        
+        performSegueWithIdentifier("PokemonDetailVC", sender: poke)
+        
+        
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pokemon.count
+        if inSearchMode{
+            return filteredPokemon.count
+        } else {
+            return pokemon.count
+        }
     }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -94,9 +119,42 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
         return CGSize(width: 105, height: 105)
     }
     
-    @IBAction func musicButtonPressed(sender: AnyObject) {
+    @IBAction func musicButtonPressed(sender: UIButton!) {
         
+        if musicPlayer.playing{
+            musicPlayer.stop()
+            sender.alpha = 0.53
+        } else{
+            musicPlayer.play()
+            sender.alpha = 1.0
+        }
     }
     
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        view.endEditing(true)
+    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        if pokeSearch.text == nil || pokeSearch.text == "" {
+            inSearchMode = false
+            view.endEditing(true)
+            collection.reloadData()
+        } else {
+            inSearchMode = true
+            let searchText = pokeSearch.text!.lowercaseString
+            filteredPokemon = pokemon.filter({$0.name.rangeOfString(searchText) != nil})
+            collection.reloadData()
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "PokemonDetailVC" {
+            if let detailsVC = segue.destinationViewController as? PokemonDetailVC {
+                if let poke = sender as? Pokemon{
+                    detailsVC.pokemon = poke
+                }
+            }
+        }
+    }
 }
 
