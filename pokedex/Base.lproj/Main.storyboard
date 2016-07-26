@@ -404,7 +404,6 @@
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="backButtonPressed" destination="5JO-6u-zr3" id="oMW-ap-MmT"/>
                         <outlet property="pokeBaseAttackLbl" destination="FVX-ED-bO5" id="gAT-pg-XBA"/>
                         <outlet property="pokeDefLbl" destination="EFN-rd-D9c" id="pl0-8p-1Do"/>
                         <outlet property="pokeDesc" destination="u0B-R8-kSq" id="vZP-hh-AN6"/>

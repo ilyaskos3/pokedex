@@ -13,7 +13,6 @@ class PokemonDetailVC: UIViewController {
     var pokemon: Pokemon!
     
     @IBOutlet weak var pokeName: UILabel!
-    
     @IBOutlet weak var pokeMainImg: UIImageView!
     @IBOutlet weak var pokeDesc: UILabel!
     @IBOutlet weak var pokeTypeLbl: UILabel!
@@ -30,7 +29,11 @@ class PokemonDetailVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        pokeName.text = pokemon.name
+        pokeMainImg.image = UIImage(named: "\(pokemon.pokedexId)")
+        pokemon.downloadPokemonDetails { () -> () in
+            
+        }
     }
 
     override func didReceiveMemoryWarning() {
