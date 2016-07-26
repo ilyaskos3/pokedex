@@ -12,9 +12,24 @@ class PokemonDetailVC: UIViewController {
 
     var pokemon: Pokemon!
     
+    @IBOutlet weak var pokeName: UILabel!
+    
+    @IBOutlet weak var pokeMainImg: UIImageView!
+    @IBOutlet weak var pokeDesc: UILabel!
+    @IBOutlet weak var pokeTypeLbl: UILabel!
+    @IBOutlet weak var pokeDefLbl: UILabel!
+    @IBOutlet weak var pokeHeightLbl: UILabel!
+    @IBOutlet weak var pokeIdLbl: UILabel!
+    @IBOutlet weak var pokeWeightLbl: UILabel!
+    @IBOutlet weak var pokeBaseAttackLbl: UILabel!
+    @IBOutlet weak var pokeEvoLbl: UILabel!
+    @IBOutlet weak var pokeNextEvoImg: UIImageView!
+    @IBOutlet weak var pokeNextNextEvo: UIImageView!
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
     }
 
@@ -33,5 +48,8 @@ class PokemonDetailVC: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    @IBAction func backButtonPressed(sender: UIButton) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
 
 }
